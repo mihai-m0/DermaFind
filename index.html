@@ -1,448 +1,227 @@
 <!DOCTYPE html>
 <html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DermaFind - Diagnostic Dermatologic AI</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <style>
-        /* =========================================
-            VARIABILE & RESET (PALETA BURGUNDY/BORDEAUX)
-            ========================================= */
-        :root {
-            /* CULORILE CORECTATE: Dominant Burgundy/Wine */
-            --primary-color: #7B1F45; /* Burgundy corporativ, cald */
-            --primary-dark: #661937;  /* Pentru efect de hover */
-            --accent-color: #009c9e;  /* Turcoaz Secundar (îl păstrăm ca accent medical) */
-            
-            --text-dark: #333333;
-            --text-light: #666666;
-            --bg-light: #f9f9f9;
-            --white: #ffffff;
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
-            --border-radius: 8px;
-        }
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            background-color: var(--white);
-        }
-
-        h1, h2, h3 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        a { text-decoration: none; }
-        
-        section {
-            padding: 80px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Buton General */
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* HERO SECTION */
-        .hero {
-            height: 90vh;
-            /* === MODIFICARE APLICATĂ AICI === */
-            background: #f7f7f7; /* Fundal gri foarte slab/subtil */
-            /* === END MODIFICARE === */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            flex-direction: column;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            color: var(--primary-dark);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-
-        /* DIAGNOSTIC & UPLOAD */
-        #diagnostic {
-            background-color: var(--bg-light);
-            border-radius: 20px;
-            margin-top: -50px;
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 10;
-        }
-
-        .upload-container {
-            display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .upload-box, .symptom-box {
-            flex: 1;
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            border: 1px dashed #ccc;
-            text-align: center;
-            min-width: 300px;
-        }
-
-        .upload-box:hover {
-            border-color: var(--primary-color);
-            background-color: #fff8f8; /* Roz pal pentru hover */
-        }
-
-        .symptom-box textarea {
-            width: 100%;
-            height: 150px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            font-family: 'Open Sans', sans-serif;
-            resize: none;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 50px;
-            color: var(--primary-dark);
-        }
-
-        /* PARTENERI (CARUSEL) */
-        .carousel-section {
-            position: relative;
-        }
-
-        .carousel-container {
-            display: flex;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-            gap: 20px;
-            padding: 20px 0;
-        }
-
-        .card {
-            min-width: calc(33.33% - 14px);
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s;
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card img {
-            height: 80px; /* Mărit pentru pozele de doctor */
-            width: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-        }
-
-        .card h3 { font-size: 1.1rem; margin-bottom: 5px; }
-        .card p { color: var(--text-light); font-size: 0.9rem; }
-
-        /* Săgeți Carusel */
-        .carousel-btn {
-            position: absolute;
-            top: 55%;
-            transform: translateY(-50%);
-            background: var(--white);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 5;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .prev-btn { left: -10px; }
-        .next-btn { right: -10px; }
-        .carousel-btn:hover { background: var(--primary-color); color: white; }
-
-        /* GOOGLE MAPS (LEAFLET) */
-        #maps-section {
-            background-color: var(--bg-light);
-        }
-
-        #map {
-            height: 450px;
-            width: 100%;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            z-index: 1;
-        }
-
-        .clinic-list {
-            list-style: none;
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .clinic-item {
-            background: var(--white);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--primary-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--text-dark);
-            color: white;
-            font-size: 0.9rem;
-        }
-
-    </style>
-</head>
-<body>
-
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
     <header class="hero">
-        <h1>Sănătatea pielii tale contează</h1>
-        <p>DermaFind folosește Inteligența Artificială pentru un triaj dermatologic rapid și sigur. Încărcați o poză și primiți un răspuns în câteva secunde.</p>
-        <button class="btn" onclick="document.getElementById('diagnostic').scrollIntoView({behavior: 'smooth'})">
-            Începe Consultația Digitală
-        </button>
+      <h1>Sănătatea pielii tale contează</h1>
+      <p>
+        DermaFind folosește Inteligența Artificială pentru un triaj dermatologic
+        rapid și sigur. Încărcați o poză și primiți un răspuns în câteva
+        secunde.
+      </p>
+      <button
+        class="btn"
+        onclick="document.getElementById('diagnostic').scrollIntoView({behavior: 'smooth'})"
+      >
+        Începe Consultația Digitală
+      </button>
     </header>
 
     <section id="diagnostic">
-        <h2 class="section-title">Pasul 1: Analiza AI</h2>
-        <div class="upload-container">
-            <div class="upload-box">
-                <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 10px;">📷</div>
-                <h3>Încarcă Fotografia</h3>
-                <p style="color: #888; margin-bottom: 20px;">Format acceptat: JPG, PNG</p>
-                <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                <button class="btn" onclick="document.getElementById('imageInput').click()" style="background: white; color: var(--primary-color); border: 2px solid var(--primary-color);">Alege Fișierul</button>
-            </div>
+      <h2 class="section-title">Pasul 1: Analiza AI</h2>
+      <div class="upload-container">
+        <div class="upload-box">
+          <div
+            style="
+              font-size: 3rem;
+              color: var(--primary-color);
+              margin-bottom: 10px;
+            "
+          >
+            📷
+          </div>
+          <h3>Încarcă Fotografia</h3>
+          <p style="color: #888; margin-bottom: 20px">
+            Format acceptat: JPG, PNG
+          </p>
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            style="display: none"
+          />
+          <p
+            id="fileStatusDisplay"
+            style="
+              margin-top: 10px;
+              font-size: 0.9rem;
+              color: var(--primary-color);
+            "
+          ></p>
+          <button
+            class="btn"
+            onclick="document.getElementById('imageInput').click()"
+            style="
+              background: white;
+              color: var(--primary-color);
+              border: 2px solid var(--primary-color);
+            "
+          >
+            Alege Fișierul
+          </button>
+        </div>
 
-            <div class="symptom-box">
-                <h3>Descrie Simptomele</h3>
-                <p style="color: #888; margin-bottom: 10px;">Ce te deranjează? (Mâncărime, durere, de când a apărut?)</p>
-                <textarea placeholder="Ex: Am o pată roșie pe braț care mă mănâncă de 2 zile..."></textarea>
-            </div>
+        <div class="symptom-box">
+          <h3>Descrie Simptomele</h3>
+          <p style="color: #888; margin-bottom: 10px">
+            Ce te deranjează? (Mâncărime, durere, de când a apărut?)
+          </p>
+          <textarea
+            placeholder="Ex: Am o pată roșie pe braț care mă mănâncă de 2 zile..."
+          ></textarea>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="btn" style="padding: 15px 50px; font-size: 1.2rem;">Analizează Acum</button>
-        </div>
+      </div>
+      <div style="text-align: center; margin-top: 30px">
+        <button
+          class="btn"
+          id="analyzeBtn"
+          style="padding: 15px 50px; font-size: 1.2rem"
+        >
+          Analizează Acum
+        </button>
+        <p
+          id="finalAnalysisResultContainer"
+          style="
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+          "
+        ></p>
+      </div>
     </section>
 
     <section class="carousel-section">
-        <h2 class="section-title">Clinici Partenere</h2>
-        <button class="carousel-btn prev-btn" onclick="scrollCarousel('clinics-carousel', -1)">❮</button>
-        <button class="carousel-btn next-btn" onclick="scrollCarousel('clinics-carousel', 1)">❯</button>
-        
-        <div class="carousel-container" id="clinics-carousel">
-            <div class="card">
-                <h3>Regina Maria</h3>
-                <p>Rețeaua Privată de Sănătate</p>
-                <p style="font-size:0.8rem; margin-top:10px; color:green;">● Disponibil</p>
-            </div>
-            <div class="card">
-                <h3>MedLife</h3>
-                <p>Sistemul Medical</p>
-                <p style="font-size:0.8rem; margin-top:10px; color:green;">● Disponibil</p>
-            </div>
-            <div class="card">
-                <h3>Sanador</h3>
-                <p>Clinică și Spital</p>
-                <p style="font-size:0.8rem; margin-top:10px; color:green;">● Disponibil</p>
-            </div>
-            <div class="card">
-                <h3>Synevo</h3>
-                <p>Laborator Analize</p>
-                <p style="font-size:0.8rem; margin-top:10px; color:green;">● Disponibil</p>
-            </div>
+      <h2 class="section-title">Clinici Partenere</h2>
+      <button
+        class="carousel-btn prev-btn"
+        onclick="scrollCarousel('clinics-carousel', -1)"
+      >
+        ❮
+      </button>
+      <button
+        class="carousel-btn next-btn"
+        onclick="scrollCarousel('clinics-carousel', 1)"
+      >
+        ❯
+      </button>
+
+      <div class="carousel-container" id="clinics-carousel">
+        <div class="card">
+          <h3>Regina Maria</h3>
+          <p>Rețeaua Privată de Sănătate</p>
+          <p style="font-size: 0.8rem; margin-top: 10px; color: green">
+            ● Disponibil
+          </p>
         </div>
+        <div class="card">
+          <h3>MedLife</h3>
+          <p>Sistemul Medical</p>
+          <p style="font-size: 0.8rem; margin-top: 10px; color: green">
+            ● Disponibil
+          </p>
+        </div>
+        <div class="card">
+          <h3>Sanador</h3>
+          <p>Clinică și Spital</p>
+          <p style="font-size: 0.8rem; margin-top: 10px; color: green">
+            ● Disponibil
+          </p>
+        </div>
+        <div class="card">
+          <h3>Synevo</h3>
+          <p>Laborator Analize</p>
+          <p style="font-size: 0.8rem; margin-top: 10px; color: green">
+            ● Disponibil
+          </p>
+        </div>
+      </div>
     </section>
 
-    <hr style="border: 0; border-top: 1px solid #eee; max-width: 1200px; margin: 0 auto;">
+    <hr
+      style="
+        border: 0;
+        border-top: 1px solid #eee;
+        max-width: 1200px;
+        margin: 0 auto;
+      "
+    />
 
     <section class="carousel-section">
-        <h2 class="section-title">Medici Recomandați</h2>
-        <button class="carousel-btn prev-btn" onclick="scrollCarousel('doctors-carousel', -1)">❮</button>
-        <button class="carousel-btn next-btn" onclick="scrollCarousel('doctors-carousel', 1)">❯</button>
-        
-        <div class="carousel-container" id="doctors-carousel">
-            <div class="card">
-                <img src="unnamed.jpg" alt="Dr. Andrei Popescu">
-                <h3>Dr. Andrei Popescu</h3>
-                <p>Medic Primar Dermatolog</p>
-            </div>
-            <div class="card">
-                <img src="unnamed (1).jpg" alt="Dr. Elena Ionescu">
-                <h3>Dr. Elena Ionescu</h3>
-                <p>Specialist Dermato-Venerologie</p>
-            </div>
-            <div class="card">
-                <img src="unnamed (2).jpg" alt="Dr. Mihai Radu">
-                <h3>Dr. Mihai Radu</h3>
-                <p>Medic Specialist</p>
-            </div>
-            <div class="card">
-                <img src="Gemini_Generated_Image_ukjb1iukjb1iukjb.png" alt="Dr. Carmen Stan">
-                <h3>Dr. Carmen Stan</h3>
-                <p>Medic Primar</p>
-            </div>
+      <h2 class="section-title">Medici Recomandați</h2>
+      <button
+        class="carousel-btn prev-btn"
+        onclick="scrollCarousel('doctors-carousel', -1)"
+      >
+        ❮
+      </button>
+      <button
+        class="carousel-btn next-btn"
+        onclick="scrollCarousel('doctors-carousel', 1)"
+      >
+        ❯
+      </button>
+
+      <div class="carousel-container" id="doctors-carousel">
+        <div class="card">
+          <img src="unnamed.jpg" alt="Dr. Andrei Popescu" />
+          <h3>Dr. Andrei Popescu</h3>
+          <p>Medic Primar Dermatolog</p>
         </div>
+        <div class="card">
+          <img src="unnamed (1).jpg" alt="Dr. Elena Ionescu" />
+          <h3>Dr. Elena Ionescu</h3>
+          <p>Specialist Dermato-Venerologie</p>
+        </div>
+        <div class="card">
+          <img src="unnamed (2).jpg" alt="Dr. Mihai Radu" />
+          <h3>Dr. Mihai Radu</h3>
+          <p>Medic Specialist</p>
+        </div>
+        <div class="card">
+          <img
+            src="Gemini_Generated_Image_ukjb1iukjb1iukjb.png"
+            alt="Dr. Carmen Stan"
+          />
+          <h3>Dr. Carmen Stan</h3>
+          <p>Medic Primar</p>
+        </div>
+      </div>
     </section>
 
     <section id="maps-section">
-        <h2 class="section-title">Găsește cea mai apropiată clinică</h2>
-        <p style="text-align: center; margin-bottom: 20px;">Locația curentă: Strada Henri Barbusse 44, Cluj-Napoca</p>
-        
-        <div id="map"></div>
-        <ul class="clinic-list" id="clinicList"></ul>
+      <h2 class="section-title">Găsește cea mai apropiată clinică</h2>
+      <p style="text-align: center; margin-bottom: 20px">
+        Locația curentă: Strada Henri Barbusse 44, Cluj-Napoca
+      </p>
+
+      <div id="map"></div>
+      <ul class="clinic-list" id="clinicList"></ul>
     </section>
 
     <footer>
-        <p>© 2025 DermaFind - Proiect Hackathon UTCN. Nu reprezintă un diagnostic medical oficial.</p>
+      <p>
+        © 2025 DermaFind - Proiect Hackathon UTCN. Nu reprezintă un diagnostic
+        medical oficial.
+      </p>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <script>
-        // --- 1. LOGICA PENTRU CARUSEL (CU LOOPING) ---
-        function scrollCarousel(id, direction) {
-            const container = document.getElementById(id);
-            const cardElement = container.querySelector('.card');
-            
-            // Verificăm dacă există cardElement pentru a calcula lățimea
-            if (!cardElement) return; 
-
-            const cardWidth = cardElement.offsetWidth;
-            const gap = 20; // Definită în CSS
-            const scrollAmount = cardWidth + gap;
-            
-            if (direction > 0) { // Săgeata Dreapta (NEXT)
-                // Verificăm dacă suntem aproape de sfârșit
-                if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-                    // Sărim instant la început (Loop)
-                    container.scrollLeft = 0; 
-                } else {
-                    // Derulare normală
-                    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                }
-            } else { // Săgeata Stânga (PREVIOUS)
-                // Verificăm dacă suntem la început
-                if (container.scrollLeft <= 5) {
-                    // Sărim instant la sfârșit (Loop)
-                    container.scrollLeft = container.scrollWidth - container.clientWidth;
-                } else {
-                    // Derulare normală
-                    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                }
-            }
-        }
-
-        // --- 2. LOGICA PENTRU HARTĂ (Codul discutat anterior) ---
-        const myLat = 46.779330;
-        const myLng = 23.606040;
-
-        const map = L.map('map').setView([myLat, myLng], 14);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        // Iconițe
-        const userIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34]
-        });
-
-        const doctorIcon = L.icon({
-            // Am schimbat markerii din roșu în purpuriu/violet pentru a se asorta cu burgundy
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png', 
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34]
-        });
-
-        // Marker User
-        L.marker([myLat, myLng], {icon: userIcon}).addTo(map)
-            .bindPopup("<b>Locația Ta</b><br>Str. Henri Barbusse 44");
-
-        // Date Clinici
-        const clinici = [
-            { nume: "Dermatologie Napoca", lat: 46.7760, lng: 23.6057, adresa: "Bd. 21 Decembrie 1989", dist: "400 m" },
-            { nume: "Regina Maria - Policlinica", lat: 46.7725, lng: 23.5998, adresa: "Calea Dorobanților", dist: "1.2 km" },
-            { nume: "Clinica Medstar", lat: 46.7810, lng: 23.6150, adresa: "Strada Fabricii", dist: "800 m" }
-        ];
-
-        const listContainer = document.getElementById('clinicList');
-
-        clinici.forEach(clinic => {
-            // Marker pe hartă
-            L.marker([clinic.lat, clinic.lng], {icon: doctorIcon}).addTo(map)
-                .bindPopup(`<b>${clinic.nume}</b><br>${clinic.adresa}`);
-
-            // Item în listă
-            const li = document.createElement('li');
-            li.className = 'clinic-item';
-            li.innerHTML = `
-                <h3 style="font-size:1.1rem; margin-bottom:5px;">${clinic.nume}</h3>
-                <p style="color:#666; font-size:0.9rem;">${clinic.adresa}</p>
-                <div style="display:flex; justify-content:space-between; margin-top:10px; align-items:center;">
-                    <span style="font-weight:bold; color:var(--primary-color);">${clinic.dist}</span>
-                    <a href="https://maps.google.com/maps/contrib/111724309756190183605${myLat},${myLng}/${clinic.lat},${clinic.lng}" target="_blank" style="color:var(--primary-dark); font-weight:600; font-size:0.9rem;">Navighează →</a>
-                </div>
-            `;
-            listContainer.appendChild(li);
-        });
-    </script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

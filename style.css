@@ -1,0 +1,251 @@
+/* =========================================
+            VARIABILE & RESET (PALETA BURGUNDY/BORDEAUX)
+            ========================================= */
+:root {
+  /* CULORILE CORECTATE: Dominant Burgundy/Wine */
+  --primary-color: #7b1f45; /* Burgundy corporativ, cald */
+  --primary-dark: #661937; /* Pentru efect de hover */
+  --accent-color: #009c9e; /* Turcoaz Secundar (îl păstrăm ca accent medical) */
+
+  --text-dark: #333333;
+  --text-light: #666666;
+  --bg-light: #f9f9f9;
+  --white: #ffffff;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --border-radius: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+  background-color: var(--white);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+a {
+  text-decoration: none;
+}
+
+section {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Buton General */
+.btn {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: background 0.3s;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn:hover {
+  background-color: var(--primary-dark);
+}
+
+/* HERO SECTION */
+.hero {
+  height: 90vh;
+  /* === MODIFICARE APLICATĂ AICI === */
+  background: #f7f7f7; /* Fundal gri foarte slab/subtil */
+  /* === END MODIFICARE === */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  color: var(--primary-dark);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* DIAGNOSTIC & UPLOAD */
+#diagnostic {
+  background-color: var(--bg-light);
+  border-radius: 20px;
+  margin-top: -50px;
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 10;
+}
+
+.upload-container {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.upload-box,
+.symptom-box {
+  flex: 1;
+  background: var(--white);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  border: 1px dashed #ccc;
+  text-align: center;
+  min-width: 300px;
+}
+
+.upload-box:hover {
+  border-color: var(--primary-color);
+  background-color: #fff8f8; /* Roz pal pentru hover */
+}
+
+.symptom-box textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 15px;
+  font-family: "Open Sans", sans-serif;
+  resize: none;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 50px;
+  color: var(--primary-dark);
+}
+
+/* PARTENERI (CARUSEL) */
+.carousel-section {
+  position: relative;
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.card {
+  min-width: calc(33.33% - 14px);
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s;
+  border-top: 4px solid var(--primary-color);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  height: 80px; /* Mărit pentru pozele de doctor */
+  width: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+.card p {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Săgeți Carusel */
+.carousel-btn {
+  position: absolute;
+  top: 55%;
+  transform: translateY(-50%);
+  background: var(--white);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.prev-btn {
+  left: -10px;
+}
+.next-btn {
+  right: -10px;
+}
+.carousel-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* GOOGLE MAPS (LEAFLET) */
+#maps-section {
+  background-color: var(--bg-light);
+}
+
+#map {
+  height: 450px;
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+.clinic-list {
+  list-style: none;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.clinic-item {
+  background: var(--white);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--text-dark);
+  color: white;
+  font-size: 0.9rem;
+}

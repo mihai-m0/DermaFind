@@ -249,3 +249,23 @@ footer {
   color: white;
   font-size: 0.9rem;
 }
+
+/* style.css */
+
+.carousel-container {
+  display: flex; /* Afișează cardurile pe o singură linie */
+  overflow-x: scroll; /* CRUCIAL: Activează derularea orizontală */
+  scroll-behavior: smooth; /* Face scroll-ul fluid (pentru funcția JS) */
+
+  /* Optional: Ascunde bara de scroll pentru un aspect mai curat */
+  /* scrollbar-width: none; */
+  /* -ms-overflow-style: none; */
+
+  padding: 20px 0; /* Spațiu de sus/jos */
+  margin: 0 auto;
+  width: 90%; /* Ajustează lățimea containerului */
+}
+
+.carousel-container {
+  scrollbar-width: none; /* Ascunde bara */
+}

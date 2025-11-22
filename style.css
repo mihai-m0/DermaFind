@@ -269,3 +269,32 @@ footer {
 .carousel-container {
   scrollbar-width: none; /* Ascunde bara */
 }
+
+/* style.css */
+
+/* Stilizarea butonului de pe listă */
+.btn-map {
+  display: inline-block;
+  padding: 8px 15px;
+  margin-top: 10px;
+  background-color: var(--accent-color); /* Folosim culoarea accent (turcoaz) */
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.btn-map:hover {
+  background-color: var(--primary-dark); /* O nuanță mai închisă de turcoaz */
+  transform: translateY(-1px);
+}
+
+/* Ajustare pentru elementul de listă să aibă spațiu pentru buton */
+.clinic-item {
+  display: flex;
+  flex-direction: column; /* Ordonează conținutul pe verticală */
+  justify-content: space-between; /* Asigură că butonul stă jos */
+  height: 100%; /* Important pentru a menține înălțimea cardurilor egală */
+}
